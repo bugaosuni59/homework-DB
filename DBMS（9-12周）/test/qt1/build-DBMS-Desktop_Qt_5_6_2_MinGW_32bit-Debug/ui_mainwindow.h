@@ -51,6 +51,7 @@ public:
     QAction *action_M_2;
     QAction *action_D_4;
     QAction *action;
+    QAction *action_Q_2;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QSplitter *splitter2;
@@ -116,6 +117,8 @@ public:
         action_D_4->setObjectName(QStringLiteral("action_D_4"));
         action = new QAction(MainWindow);
         action->setObjectName(QStringLiteral("action"));
+        action_Q_2 = new QAction(MainWindow);
+        action_Q_2->setObjectName(QStringLiteral("action_Q_2"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout_2 = new QHBoxLayout(centralWidget);
@@ -236,6 +239,7 @@ public:
         menu_R->addAction(action_N_4);
         menu_R->addAction(action_M_2);
         menu_R->addAction(action_D_4);
+        menu_R->addAction(action_Q_2);
         menu_H->addAction(action);
 
         retranslateUi(MainWindow);
@@ -266,6 +270,7 @@ public:
         action_M_2->setText(QApplication::translate("MainWindow", "\344\277\256\346\224\271\350\256\260\345\275\225(&M)", 0));
         action_D_4->setText(QApplication::translate("MainWindow", "\345\210\240\351\231\244\350\256\260\345\275\225(&D)", 0));
         action->setText(QApplication::translate("MainWindow", "\345\205\263\344\272\216(&A)", 0));
+        action_Q_2->setText(QApplication::translate("MainWindow", "\346\237\245\350\257\242\350\256\260\345\275\225(&Q)", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "\350\241\250\344\277\241\346\201\257", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "\350\256\260\345\275\225", 0));
         menu_S->setTitle(QApplication::translate("MainWindow", "\347\263\273\347\273\237(&S)", 0));

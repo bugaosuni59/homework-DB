@@ -22,6 +22,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString sql;
+    QString sqlExecute();
+    int judgeRoot(QString str);
+    bool isWord(QString str,QString word);
+    void readAWord(QString &str,int &jb);
+    void readToEnd(QString &str,int &jb);
+    bool wordLegal(QString &str);
 };
 
 #endif // MAINWINDOW_H

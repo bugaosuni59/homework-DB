@@ -155,6 +155,7 @@
     <addaction name="action_N_4"/>
     <addaction name="action_M_2"/>
     <addaction name="action_D_4"/>
+    <addaction name="action_Q_2"/>
    </widget>
    <widget class="QMenu" name="menu_H">
     <property name="title">
@@ -253,6 +254,11 @@
   <action name="action">
    <property name="text">
     <string>关于(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_Q_2">
+   <property name="text">
+    <string>查询记录(&amp;Q)</string>
    </property>
   </action>
  </widget>
