@@ -20,3 +20,5 @@ HEADERS  += mainwindow.h \
     logindialog.h
 
 FORMS    += mainwindow.ui
+
+RC_ICONS = ico.ico

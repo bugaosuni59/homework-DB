@@ -104,7 +104,7 @@ QString MainWindow::sqlExecute(){
         // 2.create table
         else if(isWord(tem1,"table")){
             tem1="";
-            readAWord(tem,jb);
+            readAWord(tem1,jb);
             if(sql[jb-1]==';'){
                 tem1[tem1.length()-2]='\0';
                 ui->textEdit->append("操作1.2.1创建空表");
@@ -175,11 +175,14 @@ QString MainWindow::sqlExecute(){
     }
     case 8:// use
     {
-        ui->textEdit->append("使用数据库");
+        ui->textEdit->append("操作8");
         tem1="";
         readToEnd(tem1,jb);
         // 得到希望使用的数据库名称
 
+        // 判断有无这个数据库，如果有，使用这个数据库
+
+        ui->textEdit->append("使用数据库");
         break;
     }
     case 0:
