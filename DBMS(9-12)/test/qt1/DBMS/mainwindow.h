@@ -1,7 +1,13 @@
+#pragma once
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "include.h"
 #include <QMainWindow>
+#include "database.h"
+#include "dbms.h"
+#include "filecontroller.h"
+#include "scrambler.h"
+#include "table.h"
 
 namespace Ui {
 class MainWindow;

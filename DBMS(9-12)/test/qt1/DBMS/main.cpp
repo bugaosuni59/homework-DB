@@ -21,6 +21,13 @@
   查询记录
   删除记录
 ********************************/
+
+#include "database.h"
+#include "dbms.h"
+#include "filecontroller.h"
+#include "scrambler.h"
+#include "table.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -33,5 +40,13 @@ int main(int argc, char *argv[])
 //    }
 //    else return 0;
     w.show();
+
+    DBMS dbms;
+//    FileController::Init(dbms);
+    Database db1;
+    Table tbl1;
+
+    FileController::Exit(dbms);
+
     return a.exec();
 }

@@ -1,6 +1,9 @@
+#pragma once
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 #include <QDialog>
+#include "include.h"
+
 class QLabel;// 类的前置声明
 class QLineEdit;
 class QPushButton;

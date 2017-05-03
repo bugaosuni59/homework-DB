@@ -14,10 +14,21 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    logindialog.cpp
+    logindialog.cpp \
+    database.cpp \
+    dbms.cpp \
+    table.cpp \
+    scrambler.cpp \
+    filecontroller.cpp
 
 HEADERS  += mainwindow.h \
-    logindialog.h
+    logindialog.h \
+    database.h \
+    dbms.h \
+    table.h \
+    scrambler.h \
+    filecontroller.h \
+    include.h
 
 FORMS    += mainwindow.ui
 
