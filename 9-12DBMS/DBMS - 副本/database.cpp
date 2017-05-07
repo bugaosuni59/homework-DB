@@ -27,10 +27,6 @@ void Database::write(ofstream &ofs){
 string Database::getName(){
     return name;
 }
-void Database::push(Table tbl){
-    table.push_back(tbl);
-    n++;
-}
 
 int Database::getTableNumber(){
     return n;
@@ -40,7 +36,7 @@ Table Database::getTable(int index){
     return table[index];
 }
 
-int Database::getTableIndex(const char* tblName){
+int Database::getTableIndex(char* tblName){
     string s;
     int l=strlen(tblName);
     int len;

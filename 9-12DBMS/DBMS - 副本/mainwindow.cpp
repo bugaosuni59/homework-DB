@@ -40,10 +40,10 @@ void MainWindow::update(){
         vector<QTreeWidgetItem*> troot;
         QTreeWidgetItem *dbItem1 = new QTreeWidgetItem(ui->tree,QStringList(tdb.getName().data()));
         troot.push_back(dbItem1);
-//        for(int j=0;j<tdb.getTableNumber();j++){
-//            QTreeWidgetItem *item1 = new QTreeWidgetItem(treeitem[i][0],QStringList(dbms->db[i].table[j].name.data())); //子节点
-//            troot.push_back(item1);
-//        }
+        for(int j=0;j<tdb.getTableNumber();j++){
+            QTreeWidgetItem *item1 = new QTreeWidgetItem(treeitem[i][0],QStringList(dbms->db[i].table[j].name.data())); //子节点
+            troot.push_back(item1);
+        }
         treeitem.push_back(troot);
     }
 }
@@ -131,7 +131,6 @@ QString MainWindow::sqlExecute(){
             tem1="";
             readAWord(tem1,jb);
             if(tem1[tem1.length()-1]==';'){
-                // 创建空表
                 tem1[tem1.length()-1]='\0';
                 ui->textEdit->append("操作1.2.1创建空表");
                 if(wordLegal(tem1)){
@@ -139,22 +138,16 @@ QString MainWindow::sqlExecute(){
                     QByteArray ba = tem1.toLatin1();
                     Table tbl1(ba.data());
                     if(dbms->getDbIndex(currentDb.getName().data())==-1){
-                        return "老哥你先use个数据库";
-//                        ui->textEdit->append("老哥你先use个数据库");
+                        ui->textEdit->append("老哥你先use个数据库");
                     }else{
-                        dbms->db[dbms->getDbIndex(currentDb.getName().data())].push(tbl1);
+                        dbms->db[dbms->getDbIndex(currentDb.getName().data())].table.push_back(tbl1);
+                        dbms->db[dbms->getDbIndex(currentDb.getName().data())].n++;
                         update();
                     }
+
                 }else{
                     return err;
                 }
-            }else if(tem1[tem1.length()-1]=='('){
-                // 创建非空表，解析语法
-                tem1[tem1.length()-1]='\0';
-                QByteArray ba = tem1.toLatin1();
-                Table tbl1(ba.data());
-                // (XXX,XXX,XXX)
-
             }
 
         }
@@ -176,8 +169,7 @@ QString MainWindow::sqlExecute(){
                 // 检查数据库的有无
                 QByteArray ba = tem1.toLatin1();
                 if(dbms->getDbIndex(ba.data())==-1){
-                    return "(´・ω・｀)没有这种特技！";
-//                    ui->textEdit->append("(´・ω・｀)没有这种特技！");
+                    ui->textEdit->append("(´・ω・｀)没有这种特技！");
                 }else{
                     dbms->drop(dbms->getDbIndex(ba.data()));
                     update();
@@ -575,3 +567,8 @@ delete
 
 根共8种
 ******************************************************************************/
+
+void MainWindow::on_action_N_triggered()
+{
+
+}
