@@ -20,6 +20,18 @@ void DBMS::drop(int index){
     db.erase(db.begin()+index);
     n--;
 }
+bool DBMS::drop(const char* dbname){
+    int jb=getDbIndex(dbname);
+    if(jb==-1)return false;
+    drop(jb);
+    return true;
+}
+bool DBMS::hasTable(const char* tblName){
+    for(int i=0;i<n;i++){
+        if(db[i].hasTable(tblName))return true;
+    }
+    return false;
+}
 
 void DBMS::write(ofstream &ofs){
     ofs<<n<<endl;
@@ -27,9 +39,13 @@ void DBMS::write(ofstream &ofs){
         db[i].write(ofs);
     }
 }
-void DBMS::push(Database database){
+bool DBMS::push(Database database){
+    for(int i=0;i<n;i++){
+        if(database.name.compare(db[i].name)==0)return false;
+    }
     n++;
     db.push_back(database);
+    return true;
 }
 
 Database DBMS::getDb(int index){

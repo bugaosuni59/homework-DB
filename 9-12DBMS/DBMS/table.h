@@ -21,7 +21,15 @@ public:
     vector<string> getRecord(int row);  // 根据角标获取记录
     vector<vector<string>> getAllRecord();    // 获取所有记录
     string get(int row,int col);    // 获得row记录col字段的内容
-
+    bool pushcol(const char* columnName,const char* columnType);// 返回0：重复了，1：成功
+    bool pushrecord(vector<int> colindex,vector<string> value);
+    bool pushrecord(vector<string> cname,vector<string> value);
+    void rename(const char* newname);
+    bool dropcol(const char* columnName);
+    bool hascol(const char* cname); // 检测有无col
+    int getColTypeNum(const char* cname); // 返回1:int 2:double 3:varchar 0:未知错误
+    int getColIndex(const char* cname);
+    bool isWord(string str,string word);
     string name; // 表单名称
     int ncol;       // 列数量
     int nrow;       // 记录数量

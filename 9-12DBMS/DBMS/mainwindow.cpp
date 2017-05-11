@@ -23,9 +23,71 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->splitter1->setStretchFactor(1, 1);
     ui->splitter2->setStretchFactor(0, 1);
     ui->splitter2->setStretchFactor(1, 3);
+    // 暂时设定为不可修改，更新功能后将废除
+    ui->table->setEditTriggers(QAbstractItemView::NoEditTriggers);  // 不可更改
+    ui->table2->setEditTriggers(QAbstractItemView::NoEditTriggers); // 不可更改
 
     ui->lineEdit->setFocus();
+    connect(ui->tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(treeclicked(QTreeWidgetItem*)));
+
 }
+void MainWindow::updatecard1(int dbid,int tblid){
+    // 字段名称、类型
+    tblmsg.clear();
+    QStringList headerLabels;
+    headerLabels << "字段名" << "类型"<<"非空"<<"主键"<<"默认值";
+    ui->table->setHorizontalHeaderLabels(headerLabels);
+    ui->table->setRowCount(dbms->db[dbid].table[tblid].ncol);
+    for(int i=0;i<dbms->db[dbid].table[tblid].ncol;i++){
+        vector<QTableWidgetItem*> vec;
+        QTableWidgetItem* item1=new QTableWidgetItem;
+        QTableWidgetItem* item2=new QTableWidgetItem;
+        item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        item2->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        QString q1="";
+        QString q2="";
+        q1+=dbms->db[dbid].table[tblid].colname[i].data();
+        q2+=dbms->db[dbid].table[tblid].coltype[i].data();
+        item1->setText(q1);
+        item2->setText(q2);
+        ui->table->setItem(i, 0, item1);
+        ui->table->setItem(i, 1, item2);
+        vec.push_back(item1);
+        vec.push_back(item2);
+        tblmsg.push_back(vec);
+    }
+    ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::updatecard2(int dbid,int tblid){
+    // 刷记录
+    recordmsg.clear();
+    QStringList headerLabels;
+    for(int i=0;i<dbms->db[dbid].table[tblid].ncol;i++){
+        headerLabels<<dbms->db[dbid].table[tblid].colname[i].data();
+    }
+    ui->table2->setColumnCount(dbms->db[dbid].table[tblid].ncol);
+    ui->table2->setRowCount(dbms->db[dbid].table[tblid].nrow);
+    ui->table2->setHorizontalHeaderLabels(headerLabels);
+    for(int i=0;i<dbms->db[dbid].table[tblid].nrow;i++){
+        vector<QTableWidgetItem*> vec;
+        for(int j=0;j<dbms->db[dbid].table[tblid].ncol;j++){
+            QTableWidgetItem* item1=new QTableWidgetItem;
+            item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            QString q1="";
+            q1+=dbms->db[dbid].table[tblid].record[i][j].data();
+            item1->setText(q1);
+            ui->table2->setItem(i, j, item1);
+            vec.push_back(item1);
+        }tblmsg.push_back(vec);
+    }
+    ui->tabWidget->setCurrentIndex(1);
+}
+
+void MainWindow::updatecard2(vector<vector<QString>> rec){
+
+}
+
 // 根据dbms进行重绘
 void MainWindow::update(){
     ui->tree->clear();
@@ -34,17 +96,34 @@ void MainWindow::update(){
     QStringList headerLabels;
     headerLabels << "字段名" << "类型"<<"非空"<<"主键"<<"默认值";
     ui->table->setHorizontalHeaderLabels(headerLabels);
-    treeitem.clear();
-    for(int i=0;i<dbms->getDbNumber();i++){
-        Database tdb = dbms->getDb(i);
-        vector<QTreeWidgetItem*> troot;
-        QTreeWidgetItem *dbItem1 = new QTreeWidgetItem(ui->tree,QStringList(tdb.getName().data()));
-        troot.push_back(dbItem1);
+//    treeitem.clear();
+//    for(int i=0;i<dbms->getDbNumber();i++){
+//        Database tdb = dbms->getDb(i);
+//        vector<QTreeWidgetItem*> troot;
+//        QTreeWidgetItem *dbItem1 = new QTreeWidgetItem(ui->tree,QStringList(tdb.getName().data()));
+//        troot.push_back(dbItem1);
 //        for(int j=0;j<tdb.getTableNumber();j++){
 //            QTreeWidgetItem *item1 = new QTreeWidgetItem(treeitem[i][0],QStringList(dbms->db[i].table[j].name.data())); //子节点
 //            troot.push_back(item1);
 //        }
-        treeitem.push_back(troot);
+//        treeitem.push_back(troot);
+//    }
+    treedb.clear();
+    treetbl.clear();
+    treei.clear();
+    treej.clear();
+    for(int i=0;i<dbms->n;i++){
+        QTreeWidgetItem *dbItem=new QTreeWidgetItem(ui->tree,QStringList(dbms->db[i].name.data()));
+        treedb.push_back(dbItem);
+    }
+    for(int i=0;i<dbms->n;i++){
+        for(int j=0;j<dbms->db[i].n;j++){
+            QTreeWidgetItem *tblItem=new QTreeWidgetItem(treedb[i],QStringList(dbms->db[i].table[j].name.data()));
+            treedb[i]->addChild(tblItem);
+            treei.push_back(i);
+            treej.push_back(j);
+            treetbl.push_back(tblItem);
+        }
     }
 }
 
@@ -56,6 +135,17 @@ MainWindow::~MainWindow()
 void MainWindow::on_action_X_triggered()
 {
     exit(0);
+}
+// 树上的某个节点被点击，刷新右侧两个选项卡，左选项卡focus
+void MainWindow::treeclicked(QTreeWidgetItem* item){
+//    item->setText(0,item->text(0)+"6");
+    int len=treetbl.size();
+    for(int i=0;i<len;i++){
+        if(item==treetbl[i]){
+            updatecard2(treei[i],treej[i]);
+            updatecard1(treei[i],treej[i]);
+        }
+    }
 }
 
 void MainWindow::on_lineEdit_editingFinished()
@@ -120,7 +210,9 @@ QString MainWindow::sqlExecute(){
 //                treeitem.push_back(troot);
                 QByteArray ba = tem1.toLatin1();
                 Database newDB(ba.data());
-                dbms->push(newDB);
+                if(!dbms->push(newDB)){
+                    return "重复了，哥(:3 」∠)";
+                }
                 update();
             }else{
                 return err;
@@ -129,10 +221,12 @@ QString MainWindow::sqlExecute(){
         // 2.create table
         else if(isWord(tem1,"table")){
             tem1="";
-            readAWord(tem1,jb);
-            if(tem1[tem1.length()-1]==';'){
+            int state = readTblName(tem1,jb);
+//            readAWord(tem1,jb);
+//            if(tem1[tem1.length()-1]==';'){
+            if(state==1){
                 // 创建空表
-                tem1[tem1.length()-1]='\0';
+//                tem1[tem1.length()-1]='\0';
                 ui->textEdit->append("操作1.2.1创建空表");
                 if(wordLegal(tem1)){
                     // 创建一个表
@@ -142,28 +236,66 @@ QString MainWindow::sqlExecute(){
                         return "老哥你先use个数据库";
 //                        ui->textEdit->append("老哥你先use个数据库");
                     }else{
-                        dbms->db[dbms->getDbIndex(currentDb.getName().data())].push(tbl1);
+                        if(!dbms->db[dbms->getDbIndex(currentDb.getName().data())].push(tbl1)){
+                            return "重复了，哥(:3 」∠)";
+                        }
                         update();
                     }
                 }else{
                     return err;
                 }
-            }else if(tem1[tem1.length()-1]=='('){
+            }else if(state==2){
                 // 创建非空表，解析语法
-                tem1[tem1.length()-1]='\0';
+                // 截取从'('到')'的内容
+                // 中间以','间隔拆开
+
+//                tem1[tem1.length()-1]='\0';
                 QByteArray ba = tem1.toLatin1();
                 Table tbl1(ba.data());
+                if(dbms->getDbIndex(currentDb.getName().data())==-1){
+                    return "老哥你先use个数据库";
+                }
                 // (XXX,XXX,XXX)
-
+                /*
+                CREATE TABLE table_name(
+                id      INT         ,
+                name    VARCHAR(20) ,
+                score   INT
+                );
+                */
+                // 读取单词，连续两个，到','或')'
+                QString tem2;
+                while(1){
+                    readAWord(tem1,jb);
+                    readAType(tem2,jb);
+                    /*****************************************
+                     注意合法判断！！！！
+                    *****************************************/
+                    if(!wordLegal(tem1)||!wordLegal(tem2)||!typeLegal(tem2)){
+                        return err;
+                    }
+    //                ba = tem1.toLatin1();
+    //                tbl1.colname.push_back(ba.data());
+    //                ba = tem2.toLatin1();
+    //                tbl1.coltype.push_back(ba.data());
+                    tbl1.pushcol(tem1.toLatin1().data(),tem2.toLatin1().data());
+                    if(sql[jb]==';'){
+                        // 把tbl添加到dbms中
+                        if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].push(tbl1)){
+                            return "重复了，哥(:3 」∠)";
+                        }
+                        update();
+                        break;
+                    }
+                }
+            }else {
+                return err;
             }
-
         }
         break;
     }
     case 2:// drop
     {
-        ui->textEdit->append("操作2");
-
         tem1="";
         readAWord(tem1,jb);
 
@@ -192,6 +324,22 @@ QString MainWindow::sqlExecute(){
             tem1="";
             readToEnd(tem1,jb);
 
+            // 检查表名的合法性
+            if(wordLegal(tem1)){
+                // 检查表的有无
+                QByteArray ba = tem1.toLatin1();
+                if(currentDb.getTableIndex(ba.data())==-1){
+                    return "(´・ω・｀)当前数据库没有这个表，也有可能是你还没use数据库";
+//                    ui->textEdit->append("(´・ω・｀)没有这种特技！");
+                }else{
+//                    dbms->drop(dbms->getDbIndex(ba.data()));
+                    dbms->db[dbms->getDbIndex(currentDb.name.data())].drop(ba.data());
+                    update();
+                }
+
+            }else{
+                return err;
+            }
 
         }
 
@@ -199,21 +347,87 @@ QString MainWindow::sqlExecute(){
     }
     case 3:// alter
     {
-        ui->textEdit->append("操作3");
-
+        readAWord(tem1,jb);
+        if(!isWord(tem1,"table"))return err;
+        readAWord(tem1,jb);
+        if(!dbms->hasTable(tem1.toLatin1().data()))return "(:3 」∠)没有这种表";
+        QString tblname=tem1;
+        readAWord(tem1,jb);
         // RENAME 重命名
-
+        if(isWord(tem1,"rename")){
+            readAWord(tem1,jb);
+            if(!isWord(tem1,"to"))return err;
+            readToEnd(tem1,jb);
+            if(!wordLegal(tem1))return err;
+            dbms->db[dbms->getDbIndex(currentDb.name.data())].rename(tblname.toLatin1().data(),tem1.toLatin1().data());
+            update();
+            return "改名成功";
+        }
         // ADD添加列
+        else if(isWord(tem1,"add")){
+            QString tem2;
+            readAWord(tem1,jb);
+            readToEnd(tem2,jb);
+            if(!wordLegal(tem1)||!typeLegal(tem2))return err;
+            if(dbms->db[dbms->getDbIndex(currentDb.name.data())].addcol(tblname.toLatin1().data(),tem1.toLatin1().data(),tem2.toLatin1().data())){
+                update();
+                return "列添加成功";
+            }
+            return "列添加失败";
+        }
+        // MODIFY修改列（不需要实现这个功能）
+        else if(isWord(tem1,"modify")){
 
-        // MODIFY修改列（不要了）
-
+        }
         // DROP删除列
+        else if(isWord(tem1,"drop")){
+            readToEnd(tem1,jb);
+            if(!wordLegal(tem1))return err;
+            if(dbms->db[dbms->getDbIndex(currentDb.name.data())].dropcol(tblname.toLatin1().data(),tem1.toLatin1().data())){
+                update();
+                return "列删除成功";
+            }
+            return "老哥，没这列吧……？";
+        }else return err;
         break;
     }
     case 4:// insert
     {
         ui->textEdit->append("操作4");
         // 插入信息
+        readAWord(tem1,jb);
+        if(!isWord(tem1,"into"))return err;
+        readTblName(tem1,jb);
+        if(!wordLegal(tem1))return err;
+        if(!dbms->hasTable(tem1.toLatin1().data()))return "没有这种表";
+        QString tblname = tem1;
+        vector<string> cname;
+        vector<int> ctype;
+        vector<string> cvalue;
+        while(1){
+            int val=readAType(tem1,jb);
+            if(!wordLegal(tem1))return err;
+            if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+                return "没有这种列";
+            cname.push_back(tem1.toLatin1().data());
+            ctype.push_back(dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),tem1.toLatin1().data()));
+            if(val==2)break;
+        }
+        readTblName(tem1,jb);
+        if(!isWord(tem1,"values"))return err;
+        for(int i=0;i<ctype.size();i++){
+            if(readAValue(tem1,jb,ctype[i])==-1)return err;
+            if(ctype[i]==1){// int
+                if(!intLegal(tem1))return err;
+                cvalue.push_back(tem1.toLatin1().data());
+            }else if(ctype[i]==2){// double
+                if(!doubleLegal(tem1))return err;
+                cvalue.push_back(tem1.toLatin1().data());
+            }else if(ctype[i]==3){// varchar
+                cvalue.push_back(tem1.toLatin1().data());
+            }
+        }
+        dbms->db[dbms->getDbIndex(currentDb.name.data())].pushrecord(tblname.toLatin1().data(),cname,cvalue);
 
         break;
     }
@@ -284,25 +498,85 @@ int MainWindow::judgeRoot(QString str){
     if(isWord(str,"use"))return 8;
     return 0;
 }
-// 从str中一个读取字符，更新next角标
+// 从sql中读取一个字符串，更新next角标
 void MainWindow::readAWord(QString &str,int &jb){
     int len=sql.length();
+    str="";
     for(int i=jb;i<len;i++){
         if(sql[i]==' '){
+            if(str.length()<=0){
+                readAWord(str,jb);
+                return;
+            }
             jb=i+1;
             break;
         }str+=sql[i];
     }
 }
-// 从str中读取字符串到分号，更新next角标
+// 从sql中读取一个字符串，更新next角标 返回0：未知异常 返回1：空表 返回2：有内容表
+int MainWindow::readTblName(QString &str,int &jb){
+    int len=sql.length();
+    int res=0;
+    str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]==' ')continue;
+        if(sql[i]==';'||sql[i]=='('){
+            jb=i+1;
+            if(sql[i]==';')res=1;
+            else if(sql[i]=='(')res=2;
+            break;
+        }str+=sql[i];
+    }return res;
+}
+// 从sql中读取一个类型，更新next角标 返回0：未知异常 返回1：, 返回2：)
+int MainWindow::readAType(QString &str,int &jb){
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]==','||sql[i]==')'){
+            jb=i+1;
+            if(sql[i]==',')return 1;
+            else return 2;
+            break;
+        }str+=sql[i];
+    }return 0;
+}
+// 从sql中读取字符串到分号，更新next角标
 void MainWindow::readToEnd(QString &str,int &jb){
     int len=sql.length();
+    str="";
     for(int i=jb;i<len;i++){
         if(sql[i]==';'){
             jb=i+1;
             break;
         }str+=sql[i];
     }
+}
+// 读取一个int 或 double 或varchar值
+int MainWindow::readAValue(QString &str,int &jb,int type){
+    int len=sql.length();
+    str="";
+    if(type!=3){
+        for(int i=jb;i<len;i++){
+            if(sql[i]==','||sql[i]==')'){
+                jb=i+1;
+                if(sql[i]==',')return 1;
+                else return 2;
+                break;
+            }str+=sql[i];
+        }return 0;
+    }
+    if(type==3){
+        if(sql[jb]=='\'')jb+=1;
+        else return -1;
+        for(int i=jb;i<len;i++){
+            if(sql[i]=='\''){
+                jb=i+2;
+                break;
+            }str+=sql[i];
+        }return 0;
+    }
+    return 0;
 }
 // 判断str是不是word（大小写兼容）
 bool MainWindow::isWord(QString str,QString word){
@@ -354,7 +628,30 @@ bool MainWindow::wordLegal(QString &str){
                 str[i]=='}')return false;
     }return true;
 }
+bool MainWindow::typeLegal(QString &str){
+    return isWord(str,"int")||isWord(str,"varchar")||isWord(str,"double");
+}
+bool MainWindow::intLegal(QString &str){
+    // 只有数字
+    int len=str.length();
+    for(int i=0;i<len;i++){
+        if(!(str[i]>='0'&&str[i]<='9'))return false;
+    }return true;
+}
 
+bool MainWindow::doubleLegal(QString &str){
+    // 除了最多一个的小数点，只有数字，不排除前导0末尾0
+    int cnt=0;
+    int len=str.length();
+    for(int i=0;i<len;i++){
+        if(!(str[i]>='0'&&str[i]<='9')){
+            if(str[i]!='.')return false;
+            cnt++;
+        }
+    }
+    if(cnt>=2)return false;
+    return true;
+}
 void MainWindow::closeEvent(QCloseEvent *event){
     FileController::Exit(dbms);
 }

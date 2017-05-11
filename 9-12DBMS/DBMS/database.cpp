@@ -27,9 +27,24 @@ void Database::write(ofstream &ofs){
 string Database::getName(){
     return name;
 }
-void Database::push(Table tbl){
+bool Database::push(Table tbl){
+    for(int i=0;i<n;i++){
+        if(tbl.name.compare(table[i].name)==0)return false;
+    }
     table.push_back(tbl);
     n++;
+    return true;
+}
+void Database::drop(int index){
+    table.erase(table.begin()+index);
+    n--;
+}
+
+bool Database::drop(const char* tblName){
+    int jb=getTableIndex(tblName);
+    if(jb==-1)return false;
+    drop(jb);
+    return true;
 }
 
 int Database::getTableNumber(){
@@ -38,6 +53,28 @@ int Database::getTableNumber(){
 
 Table Database::getTable(int index){
     return table[index];
+}
+bool Database::hasTable(const char* tblName){
+    if(getTableIndex(tblName)==-1)return false;
+    return true;
+}
+void Database::rename(const char* tblname,const char* newName){
+    table[getTableIndex(tblname)].rename(newName);
+}
+bool Database::addcol(const char* tblname,const char* cname,const char* ctype){
+    return table[getTableIndex(tblname)].pushcol(cname,ctype);
+}
+bool Database::dropcol(const char* tblname,const char* cname){
+    return table[getTableIndex(tblname)].dropcol(cname);
+}
+bool Database::hascol(const char* tblName,const char* cname){
+    return table[getTableIndex(tblName)].hascol(cname);
+}
+int Database::getColTypeNum(const char* tblName,const char* cname){
+    return table[getTableIndex(tblName)].getColTypeNum(cname);
+}
+bool Database::pushrecord(const char* tblName,vector<string> cname,vector<string> value){
+    return table[getTableIndex(tblName)].pushrecord(cname,value);
 }
 
 int Database::getTableIndex(const char* tblName){
