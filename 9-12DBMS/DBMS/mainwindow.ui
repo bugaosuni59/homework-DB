@@ -147,7 +147,6 @@
      <string>数据库(&amp;D)</string>
     </property>
     <addaction name="action_N"/>
-    <addaction name="action_R"/>
     <addaction name="action_D"/>
    </widget>
    <widget class="QMenu" name="menu_T">
@@ -157,7 +156,6 @@
     <addaction name="action_N_2"/>
     <addaction name="action_R_2"/>
     <addaction name="action_Q"/>
-    <addaction name="action_C"/>
     <addaction name="action_D_2"/>
    </widget>
    <widget class="QMenu" name="menu_F">

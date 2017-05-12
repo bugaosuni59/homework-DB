@@ -270,6 +270,12 @@ QString MainWindow::sqlExecute(){
     update,select,delete,use
     共8种
     ********************/
+    ofstream ofs("log.log",ios::app);
+    QDateTime time = QDateTime::currentDateTime();//获取系统现在的时间
+    QString str = time.toString("yyyy-MM-dd hh:mm:ss ddd"); //设置显示格式
+    ofs<<"At "<<str.toLatin1().data()<<" : "<<sql.toLatin1().data()<<endl;
+    ofs.close();
+
     QString err = "还有这种操作Σ(ﾟдﾟ|||)语法错误！";
     QString tem1="";
     int jb=0; // 记录要解析位置的角标
@@ -312,7 +318,7 @@ QString MainWindow::sqlExecute(){
             if(state==1){
                 // 创建空表
 //                tem1[tem1.length()-1]='\0';
-                ui->textEdit->append("操作1.2.1创建空表");
+                ui->textEdit->append("创建表");
                 if(wordLegal(tem1)){
                     // 创建一个表
                     QByteArray ba = tem1.toLatin1();
@@ -451,7 +457,6 @@ QString MainWindow::sqlExecute(){
                 updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
                 return "列添加成功";
             }
-            return "列添加失败";
         }
         // MODIFY修改列（不需要实现这个功能）
         else if(isWord(tem1,"modify")){
@@ -1266,3 +1271,94 @@ delete
 
 根共8种
 ******************************************************************************/
+
+void MainWindow::on_action_triggered()
+{
+    Dialoghelp di;
+    di.exec();
+}
+
+void MainWindow::on_action_N_triggered()
+{
+    DialogDbNew di(this);
+    di.exec();
+}
+
+
+void MainWindow::on_action_D_triggered()
+{
+    DialogDbDel di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_N_2_triggered()
+{
+    DialogTblNew di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_R_2_triggered()
+{
+    DialogTblRename di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_D_2_triggered()
+{
+    DialogTblDel di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_Q_triggered()
+{
+    DialogTblQuery di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_Q_2_triggered()
+{
+    DialogTblQuery di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_M_triggered()
+{
+    DialogColRename di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_N_3_triggered()
+{
+    DialogColAdd di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_D_3_triggered()
+{
+    DialogColDel di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_N_4_triggered()
+{
+    DialogRecAdd di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_M_2_triggered()
+{
+    DialogRecUpdate di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_D_4_triggered()
+{
+    DialogRecDel di(this);
+    di.exec();
+}
+
+void MainWindow::on_action_L_triggered()
+{
+    DialogLog di(this);
+    di.exec();
+}

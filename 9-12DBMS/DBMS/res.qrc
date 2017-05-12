@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>About.png</file>
+        <file>bendan9.ico</file>
+        <file>db.png</file>
+        <file>ico.ico</file>
+        <file>myico.ico</file>
+    </qresource>
+</RCC>

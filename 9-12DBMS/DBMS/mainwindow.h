@@ -13,6 +13,24 @@
 #include "ui_mainwindow.h"
 #include "database.h"
 #include "table.h"
+#include "dialoghelp.h"
+#include "dialogdbnew.h"
+#include "dialogdbdel.h"
+#include "dialogdbrename.h"
+#include "dialogtblclear.h"
+#include "dialogtbldel.h"
+#include "dialogtblnew.h"
+#include "dialogtblquery.h"
+#include "dialogtblrename.h"
+#include "dialogcoladd.h"
+#include "dialogcoldel.h"
+#include "dialogcolrename.h"
+#include "dialogrecadd.h"
+#include "dialogrecdel.h"
+#include "dialogrecupdate.h"
+#include "dialoglog.h"
+#include <QFileDialog>
+#include <QDateTime>
 
 namespace Ui {
 class MainWindow;
@@ -31,7 +49,37 @@ private slots:
     void on_action_X_triggered();
     void on_lineEdit_editingFinished();
     void treeclicked(QTreeWidgetItem* item);
-private:
+    void on_action_triggered();
+
+    void on_action_N_triggered();
+
+    void on_action_D_triggered();
+
+    void on_action_N_2_triggered();
+
+    void on_action_R_2_triggered();
+
+    void on_action_D_2_triggered();
+
+    void on_action_Q_triggered();
+
+    void on_action_Q_2_triggered();
+
+    void on_action_M_triggered();
+
+    void on_action_N_3_triggered();
+
+    void on_action_D_3_triggered();
+
+    void on_action_N_4_triggered();
+
+    void on_action_M_2_triggered();
+
+    void on_action_D_4_triggered();
+
+    void on_action_L_triggered();
+
+public:
     Ui::MainWindow *ui;
     DBMS *dbms;
     Database currentDb;

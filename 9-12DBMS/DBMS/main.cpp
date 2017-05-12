@@ -32,15 +32,15 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-//    LoginDialog dlg;
-//    if(dlg.exec()==QDialog::Accepted)
-//    {
-//        w.show();
-//        return a.exec();
-//    }
-//    else return 0;
+    LoginDialog dlg;
+    if(dlg.exec()==QDialog::Accepted)
+    {
+        w.show();
+        return a.exec();
+    }
+    else return 0;
 
-    w.show();
+//    w.show();
 
 //    DBMS dbms;
 //    Database db1;

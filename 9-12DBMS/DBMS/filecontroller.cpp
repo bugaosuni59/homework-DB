@@ -12,6 +12,9 @@ void FileController::Init(DBMS *dbms){
     ifs.open(tem);
     dbms->read(ifs);
     ifs.close();
+    ofstream ofs;
+    ofs.open(tem);
+    ofs.close();
 }
 
 void FileController::Exit(DBMS *dbms){
@@ -20,6 +23,8 @@ void FileController::Exit(DBMS *dbms){
     dbms->write(ofs);
     ofs.close();
     Scrambler::encode(file,tem);
+    ofs.open(tem);
+    ofs.close();
 }
 
 
