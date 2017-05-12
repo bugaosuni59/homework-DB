@@ -164,7 +164,7 @@ select
 				;
 				where
 					...
-	
+
 delete
 	from
 		±íÃû

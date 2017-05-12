@@ -83,6 +83,91 @@ void MainWindow::updatecard2(int dbid,int tblid){
     }
     ui->tabWidget->setCurrentIndex(1);
 }
+void MainWindow::updatecard2(int dbid,int tblid,vector<int> rowid){
+    // 刷记录
+    recordmsg.clear();
+    QStringList headerLabels;
+    for(int i=0;i<dbms->db[dbid].table[tblid].ncol;i++){
+        headerLabels<<dbms->db[dbid].table[tblid].colname[i].data();
+    }
+    ui->table2->setColumnCount(dbms->db[dbid].table[tblid].ncol);
+    ui->table2->setRowCount(rowid.size());
+    ui->table2->setHorizontalHeaderLabels(headerLabels);
+//    for(int i=0;i<dbms->db[dbid].table[tblid].nrow;i++){
+//        vector<QTableWidgetItem*> vec;
+//        for(int j=0;j<dbms->db[dbid].table[tblid].ncol;j++){
+//            QTableWidgetItem* item1=new QTableWidgetItem;
+//            item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+//            QString q1="";
+//            q1+=dbms->db[dbid].table[tblid].record[i][j].data();
+//            item1->setText(q1);
+//            ui->table2->setItem(i, j, item1);
+//            vec.push_back(item1);
+//        }tblmsg.push_back(vec);
+//    }
+    for(int i=0;i<rowid.size();i++){
+        vector<QTableWidgetItem*> vec;
+        for(int j=0;j<dbms->db[dbid].table[tblid].ncol;j++){
+            QTableWidgetItem* item1=new QTableWidgetItem;
+            item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            QString q1="";
+            q1+=dbms->db[dbid].table[tblid].record[rowid[i]][j].data();
+            item1->setText(q1);
+            ui->table2->setItem(i, j, item1);
+            vec.push_back(item1);
+        }tblmsg.push_back(vec);
+    }
+    ui->tabWidget->setCurrentIndex(1);
+}
+
+void MainWindow::updatecard2(int dbid,int tblid,vector<int> colid,bool a){
+    recordmsg.clear();
+    QStringList headerLabels;
+    for(int i=0;i<colid.size();i++){
+        headerLabels<<dbms->db[dbid].table[tblid].colname[colid[i]].data();
+    }
+    ui->table2->setColumnCount(colid.size());
+    ui->table2->setRowCount(dbms->db[dbid].table[tblid].nrow);
+    ui->table2->setHorizontalHeaderLabels(headerLabels);
+    for(int i=0;i<dbms->db[dbid].table[tblid].nrow;i++){
+        vector<QTableWidgetItem*> vec;
+        for(int j=0;j<colid.size();j++){
+            QTableWidgetItem* item1=new QTableWidgetItem;
+            item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            QString q1="";
+            q1+=dbms->db[dbid].table[tblid].record[i][colid[j]].data();
+            item1->setText(q1);
+            ui->table2->setItem(i, j, item1);
+            vec.push_back(item1);
+        }tblmsg.push_back(vec);
+    }
+    ui->tabWidget->setCurrentIndex(1);
+}
+
+void MainWindow::updatecard2(int dbid,int tblid,vector<int> rowid,vector<int> colid){
+    recordmsg.clear();
+    QStringList headerLabels;
+    for(int i=0;i<colid.size();i++){
+        headerLabels<<dbms->db[dbid].table[tblid].colname[colid[i]].data();
+    }
+    ui->table2->setColumnCount(colid.size());
+    ui->table2->setRowCount(rowid.size());
+    ui->table2->setHorizontalHeaderLabels(headerLabels);
+    for(int i=0;i<rowid.size();i++){
+        vector<QTableWidgetItem*> vec;
+        for(int j=0;j<colid.size();j++){
+            QTableWidgetItem* item1=new QTableWidgetItem;
+            item1->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            QString q1="";
+            q1+=dbms->db[dbid].table[tblid].record[rowid[i]][colid[j]].data();
+            item1->setText(q1);
+            ui->table2->setItem(i, j, item1);
+            vec.push_back(item1);
+        }tblmsg.push_back(vec);
+    }
+    ui->tabWidget->setCurrentIndex(1);
+
+}
 
 void MainWindow::updatecard2(vector<vector<QString>> rec){
 
@@ -255,14 +340,6 @@ QString MainWindow::sqlExecute(){
                 if(dbms->getDbIndex(currentDb.getName().data())==-1){
                     return "老哥你先use个数据库";
                 }
-                // (XXX,XXX,XXX)
-                /*
-                CREATE TABLE table_name(
-                id      INT         ,
-                name    VARCHAR(20) ,
-                score   INT
-                );
-                */
                 // 读取单词，连续两个，到','或')'
                 QString tem2;
                 while(1){
@@ -371,6 +448,7 @@ QString MainWindow::sqlExecute(){
             if(!wordLegal(tem1)||!typeLegal(tem2))return err;
             if(dbms->db[dbms->getDbIndex(currentDb.name.data())].addcol(tblname.toLatin1().data(),tem1.toLatin1().data(),tem2.toLatin1().data())){
                 update();
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
                 return "列添加成功";
             }
             return "列添加失败";
@@ -385,6 +463,7 @@ QString MainWindow::sqlExecute(){
             if(!wordLegal(tem1))return err;
             if(dbms->db[dbms->getDbIndex(currentDb.name.data())].dropcol(tblname.toLatin1().data(),tem1.toLatin1().data())){
                 update();
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
                 return "列删除成功";
             }
             return "老哥，没这列吧……？";
@@ -393,7 +472,6 @@ QString MainWindow::sqlExecute(){
     }
     case 4:// insert
     {
-        ui->textEdit->append("操作4");
         // 插入信息
         readAWord(tem1,jb);
         if(!isWord(tem1,"into"))return err;
@@ -428,29 +506,223 @@ QString MainWindow::sqlExecute(){
             }
         }
         dbms->db[dbms->getDbIndex(currentDb.name.data())].pushrecord(tblname.toLatin1().data(),cname,cvalue);
+        updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
 
         break;
     }
     case 5:// update
     {
-        ui->textEdit->append("操作5");
         // 更新某记录中某项值
+        readAWord(tem1,jb);
+        if(!wordLegal(tem1))return err;
+        if(!dbms->hasTable(tem1.toLatin1().data()))return "没有这种表";
+        QString tblname=tem1;
+        readAWord(tem1,jb);
+        if(!isWord(tem1,"set"))return err;
+        readToOpr(tem1,jb); // 列名
+        if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+            return "没有这种列";
+        QString colname=tem1;
+        int op = readOpr(tem1,jb);   // 运算符
+        if(op!=5)return err;
+        int coltype=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname.toLatin1().data());
+        // 1整数 2小数 3字符串
+        // 数字分号 '字符串'分号
+        if(coltype==3){
+            readAStr(tem1,jb);
+        }
+        else {
+            readANum(tem1,jb);
+            if(coltype==1){
+                if(!intLegal(tem1))return err;
+            }else if(!doubleLegal(tem1))return err;
+        }
+        QString value=tem1;
+        if(sql[jb]==';'){
+            // 修改这一列所有内容
+            dbms->db[dbms->getDbIndex(currentDb.name.data())].update(tblname.toLatin1().data(),colname.toLatin1().data(),coltype,value.toLatin1().data());
+            updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
+
+        }else{
+            readAWord(tem1,jb);
+            if(!isWord(tem1,"where"))return err;
+            readToOpr(tem1,jb); // 列名
+            if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+                return "没有这种列";
+            QString colname2=tem1;
+            int opr = readOpr(tem1,jb);   // 运算符
+            if(opr==0)return err;
+            int coltype2=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname.toLatin1().data());
+            // 1整数 2小数 3字符串
+            // 数字分号 '字符串'分号
+            if(coltype2==3){
+                readAStr(tem1,jb);
+            }
+            else {
+                readANum(tem1,jb);
+                if(coltype2==1){
+                    if(!intLegal(tem1))return err;
+                }else if(!doubleLegal(tem1))return err;
+            }
+            /*
+            tblname
+            colname
+            coltype
+            value
+            colname2
+            coltype2
+            opr
+            tem1
+            */
+            updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()),
+                        dbms->db[dbms->getDbIndex(currentDb.name.data())].update(tblname.toLatin1().data(),colname.toLatin1().data(),coltype,value.toLatin1().data(),colname2.toLatin1().data(),coltype2,opr,tem1.toLatin1().data()));
+        }
 
         break;
     }
     case 6:// select
     {
-        ui->textEdit->append("操作6");
         // 1.select *
-
         // 2.select 列1,列2...
+        if(readAZimu(jb)=='*'){
+            readAWord(tem1,jb);
+            if(!isWord(tem1,"from"))return err;
+            if(!wordLegal(tem1))return err;
+            readTblName2(tem1,jb);
+            if(!wordLegal(tem1))return err;
+            if(!dbms->hasTable(tem1.toLatin1().data()))return "没有这种表";
+            QString tblname=tem1;
+            // 有或无where
+            if(sql[jb]==';'){
+                // 直接选择该表内容
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
+            }else{
+                // 读取where条件
+                readAWord(tem1,jb);
+                if(!isWord(tem1,"where"))return err;
+                readToOpr(tem1,jb); // 列名
+                if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+                    return "没有这种列";
+                QString colname=tem1;
+                int opr = readOpr(tem1,jb);   // 运算符
+                if(opr==0)return err;
+                int coltype=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname.toLatin1().data());
+                // 1整数 2小数 3字符串
+                // 数字分号 '字符串'分号
+                if(coltype==3){
+                    readAStr(tem1,jb);
+                }
+                else {
+                    readANum(tem1,jb);
+                    if(coltype==1){
+                        if(!intLegal(tem1))return err;
+                    }else if(!doubleLegal(tem1))return err;
+                }
+                // 使用tblname，colname，coltype，opr，tem1去找vec<row>
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()),
+                            dbms->db[dbms->getDbIndex(currentDb.name.data())].select(tblname.toLatin1().data(),colname.toLatin1().data(),coltype,opr,tem1.toLatin1().data()));
+            }
+        }else{
+            vector<int> colid;
+            vector<QString> colname;
+            // 列名 from
+            // 列名,列名 from
+            while(readACol(tem1,jb)){
+                colname.push_back(tem1);
+            }
+            colname.push_back(tem1);
+            readAWord(tem1,jb);
+            if(!isWord(tem1,"from"))return err;
+            if(!wordLegal(tem1))return err;
+            readTblName2(tem1,jb);
+            if(!wordLegal(tem1))return err;
+            if(!dbms->hasTable(tem1.toLatin1().data()))return "没有这种表";
+            QString tblname=tem1;
 
+            for(int i=0;i<colname.size();i++){
+                // 检测列的有无
+                if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),colname[i].toLatin1().data()))
+                    return "没有这种列";
+                // 找到列号加入
+                int cid=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColIndex(tblname.toLatin1().data(),colname[i].toLatin1().data());
+                colid.push_back(cid);
+            }
+            /*
+            <>colid
+            <>colname
+            tblname
+            要读where后面的内容
+            */
+            if(sql[jb]==';'){
+                // 直接选择该表内容
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()),colid,true);
+            }else{
+                // 读取where条件
+                readAWord(tem1,jb);
+                if(!isWord(tem1,"where"))return err;
+                readToOpr(tem1,jb); // 列名
+                if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+                    return "没有这种列";
+                QString colname2=tem1;
+                int opr = readOpr(tem1,jb);   // 运算符
+                if(opr==0)return err;
+                int coltype=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname2.toLatin1().data());
+                // 1整数 2小数 3字符串
+                // 数字分号 '字符串'分号
+                if(coltype==3){
+                    readAStr(tem1,jb);
+                }
+                else {
+                    readANum(tem1,jb);
+                    if(coltype==1){
+                        if(!intLegal(tem1))return err;
+                    }else if(!doubleLegal(tem1))return err;
+                }
+//                // 使用tblname，colname，coltype，opr，tem1去找vec<row>
+                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()),
+                            dbms->db[dbms->getDbIndex(currentDb.name.data())].select(tblname.toLatin1().data(),colname2.toLatin1().data(),coltype,opr,tem1.toLatin1().data()),colid);
+//                updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()),
+//                            dbms->db[dbms->getDbIndex(currentDb.name.data())].select(tblname.toLatin1().data(),colname.toLatin1().data(),coltype,opr,tem1.toLatin1().data()));
+            }
+
+
+        }
         break;
     }
     case 7:// delete
     {
-        ui->textEdit->append("操作7");
         // 删记录
+        readAWord(tem1,jb);
+        if(!isWord(tem1,"from"))return err;
+        readAWord(tem1,jb);
+        if(!wordLegal(tem1))return err;
+        if(!dbms->hasTable(tem1.toLatin1().data()))return "没有这种表";
+        QString tblname=tem1;
+        readAWord(tem1,jb);
+        if(!isWord(tem1,"where"))return err;
+        readToOpr(tem1,jb); // 列名
+        if(!dbms->db[dbms->getDbIndex(currentDb.name.data())].hascol(tblname.toLatin1().data(),tem1.toLatin1().data()))
+            return "没有这种列";
+        QString colname=tem1;
+        int opr = readOpr(tem1,jb);   // 运算符
+        if(opr==0)return err;
+        int coltype=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname.toLatin1().data());
+        // 1整数 2小数 3字符串
+        // 数字分号 '字符串'分号
+        if(coltype==3){
+            readAStr(tem1,jb);
+        }
+        else {
+            readANum(tem1,jb);
+            if(coltype==1){
+                if(!intLegal(tem1))return err;
+            }else if(!doubleLegal(tem1))return err;
+        }
+        // tblname colname coltype opr tem1
+        // > < >= <= =
+        // 1 2 3  4  5
+        dbms->db[dbms->getDbIndex(currentDb.name.data())].delrecord(tblname.toLatin1().data(),colname.toLatin1().data(),coltype,opr,tem1.toLatin1().data());
+        updatecard2(dbms->getDbIndex(currentDb.name.data()),dbms->db[dbms->getDbIndex(currentDb.name.data())].getTableIndex(tblname.toLatin1().data()));
 
         break;
     }
@@ -505,6 +777,7 @@ void MainWindow::readAWord(QString &str,int &jb){
     for(int i=jb;i<len;i++){
         if(sql[i]==' '){
             if(str.length()<=0){
+                jb++;
                 readAWord(str,jb);
                 return;
             }
@@ -513,6 +786,38 @@ void MainWindow::readAWord(QString &str,int &jb){
         }str+=sql[i];
     }
 }
+bool MainWindow::readACol(QString &str,int &jb){
+    // 读取到逗号返回1 空格返回0
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]==' '||sql[i]==','){
+            if(str.length()<=0){
+                jb++;
+                return readACol(str,jb);
+            }
+            jb=i+1;
+            if(sql[i]==' ')return false;
+            if(sql[i]==',')return true;
+            break;
+        }str+=sql[i];
+    }
+    return false;
+}
+
+char MainWindow::readAZimu(int &jb){
+    int len=sql.length();
+    string str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]!=' '){
+            jb=i;
+            str+=sql[i].toLatin1();
+            if(str[0]=='*')jb++;
+            return str[0];
+        }
+    }return ' ';
+}
+
 // 从sql中读取一个字符串，更新next角标 返回0：未知异常 返回1：空表 返回2：有内容表
 int MainWindow::readTblName(QString &str,int &jb){
     int len=sql.length();
@@ -527,6 +832,17 @@ int MainWindow::readTblName(QString &str,int &jb){
             break;
         }str+=sql[i];
     }return res;
+}
+void MainWindow::readTblName2(QString &str,int &jb){
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]==';'||sql[i]==' '){
+            jb=i;
+            if(sql[i]==' ')jb++;
+            break;
+        }str+=sql[i];
+    }
 }
 // 从sql中读取一个类型，更新next角标 返回0：未知异常 返回1：, 返回2：)
 int MainWindow::readAType(QString &str,int &jb){
@@ -552,6 +868,34 @@ void MainWindow::readToEnd(QString &str,int &jb){
         }str+=sql[i];
     }
 }
+void MainWindow::readANum(QString &str,int &jb){
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(!(sql[i]==','||(sql[i]>='0'&&sql[i]<='9'))){
+            jb=i;
+            if(str.length()<=0){
+                jb++;
+                readANum(str,jb);
+            }
+            break;
+        }str+=sql[i];
+    }
+}
+void MainWindow::readAStr(QString &str,int &jb){
+    int len=sql.length();
+    str="";
+    int i=jb;
+    for(;sql[i]!='\''&&i<len;i++){;}
+    i++;
+    for(;i<len;i++){
+        if(sql[i]=='\''){
+            jb=i+1;
+            break;
+        }str+=sql[i];
+    }
+}
+
 // 读取一个int 或 double 或varchar值
 int MainWindow::readAValue(QString &str,int &jb,int type){
     int len=sql.length();
@@ -578,6 +922,56 @@ int MainWindow::readAValue(QString &str,int &jb,int type){
     }
     return 0;
 }
+int MainWindow::readOpr(QString &str,int &jb){
+    // > < >= <= =
+    // 1 2 3  4  5
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(!(sql[i]=='<'||sql[i]=='>'||sql[i]=='=')){
+            if(str.length()<=0){
+                jb++;
+                return readOpr(str,jb);
+            }
+            jb=i;
+            if(sql[i]==' ')jb=i+1;
+            break;
+        }str+=sql[i];
+    }
+    return judgeOpr(str);
+}
+int MainWindow::judgeOpr(QString &str){
+    // > < >= <= =
+    // 1 2 3  4  5
+    if(str[0]=='>'&&str.length()==1)return 1;
+    if(str[0]=='<'&&str.length()==1)return 2;
+    if(str[0]=='>'&&str.length()==2&&str[1]=='=')return 3;
+    if(str[0]=='<'&&str.length()==2&&str[1]=='=')return 4;
+    if(str[0]=='='&&str.length()==1)return 5;
+    return 0;
+}
+
+void MainWindow::readToOpr(QString &str,int &jb){
+    // 读取到 空格或操作符
+    int len=sql.length();
+    str="";
+    for(int i=jb;i<len;i++){
+        if(sql[i]==' '||sql[i]=='>'||sql[i]=='<'||sql[i]=='='){
+            if(sql[i]==' '){
+                if(str.length()<=0){
+                    jb++;
+                    readAWord(str,jb);
+                    return;
+                }
+                jb=i+1;
+            }else{
+                jb=i;
+            }
+            break;
+        }str+=sql[i];
+    }
+}
+
 // 判断str是不是word（大小写兼容）
 bool MainWindow::isWord(QString str,QString word){
     int len=word.length();

@@ -48,13 +48,24 @@ private:
     void updatecard1(int dbid,int tblid); // 更新选项卡1，table详细信息
     void updatecard2(int dbid,int tblid); // 更新选项卡2，record信息
     void updatecard2(vector<vector<QString>> rec); // 更新选项卡2，select检索
+    void updatecard2(int dbid,int tblid,vector<int> rowid); // 更新选项卡2
+    void updatecard2(int dbid,int tblid,vector<int> colid,bool a); // 更新选项卡2
+    void updatecard2(int dbid,int tblid,vector<int> rowid,vector<int> colid); // 更新选项卡2
     int judgeRoot(QString str);
+    int judgeOpr(QString &str);
     bool isWord(QString str,QString word);
+    char readAZimu(int &jb);
     void readAWord(QString &str,int &jb);
+    void readAStr(QString &str,int &jb);
+    void readANum(QString &str,int &jb);
     int readTblName(QString &str,int &jb);
+    void readTblName2(QString &str,int &jb);
     int readAType(QString &str,int &jb);
+    bool readACol(QString &str,int &jb);
     int readAValue(QString &str,int &jb,int type);
+    int readOpr(QString &str,int &jb);
     void readToEnd(QString &str,int &jb);
+    void readToOpr(QString &str,int &jb);
     bool wordLegal(QString &str);
     bool intLegal(QString &str);
     bool doubleLegal(QString &str);

@@ -48,6 +48,339 @@ int Table::getColTypeNum(const char* cname){
     if(isWord(str,"varchar"))return 3;
     return 0;
 }
+void Table::delrecord(const char* cname,int ctype,int opr,const char* value){
+    // > < >= <= =
+    // 1 2 3  4  5
+    // type 1 int 2 double 3 varchar
+    int cindex=getColIndex(cname);
+    if(ctype==1){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpint(record[i][cindex],value)>0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==2){
+                if(cmpint(record[i][cindex],value)<0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==3){
+                if(cmpint(record[i][cindex],value)>=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==4){
+                if(cmpint(record[i][cindex],value)<=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==5){
+                if(cmpint(record[i][cindex],value)==0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }
+        }
+    }else if(ctype==2){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpdouble(record[i][cindex],value)>0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==2){
+                if(cmpdouble(record[i][cindex],value)<0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==3){
+                if(cmpdouble(record[i][cindex],value)>=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==4){
+                if(cmpdouble(record[i][cindex],value)<=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==5){
+                if(cmpdouble(record[i][cindex],value)==0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }
+        }
+    }else if(ctype==3){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+//                if(cmpstring(record[i][cindex],value)>0){
+//                    record.erase(record.begin()+i);
+//                    nrow--;
+//                    i--;
+//                }
+            }else if(opr==2){
+//                if(cmpstring(record[i][cindex],value)<0){
+//                    record.erase(record.begin()+i);
+//                    nrow--;
+//                    i--;
+//                }
+            }else if(opr==3){
+                if(cmpstring(record[i][cindex],value)>=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==4){
+                if(cmpstring(record[i][cindex],value)<=0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }else if(opr==5){
+                if(cmpstring(record[i][cindex],value)==0){
+                    record.erase(record.begin()+i);
+                    nrow--;
+                    i--;
+                }
+            }
+        }
+    }
+}
+
+void Table::update(const char* cname,int ctype,const char* value){
+    int cindex=getColIndex(cname);
+    for(int i=0;i<nrow;i++){
+        record[i][cindex]="";
+        record[i][cindex]+=value;
+    }
+//    if(ctype==1){// int
+//    }else if(ctype==2){// double
+
+//    }else if(ctype==3){// string
+
+//    }
+}
+
+vector<int> Table::update(const char* cname,int ctype,const char* value,const char* cname2,int ctype2,int opr,const char* value2){
+    vector<int> rowid;
+    int cindex=getColIndex(cname);
+    int cindex2=getColIndex(cname2);
+    if(ctype2==1){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpint(record[i][cindex2],value2)>0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==2){
+                if(cmpint(record[i][cindex2],value2)<0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==3){
+                if(cmpint(record[i][cindex2],value2)>=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpint(record[i][cindex2],value2)<=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpint(record[i][cindex2],value2)==0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }else if(ctype2==2){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpdouble(record[i][cindex2],value2)>0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==2){
+                if(cmpdouble(record[i][cindex2],value2)<0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==3){
+                if(cmpdouble(record[i][cindex2],value2)>=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpdouble(record[i][cindex2],value2)<=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpdouble(record[i][cindex2],value2)==0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }else if(ctype2==3){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+//                if(cmpstring(record[i][cindex2],value2)>0){
+//                record[i][cindex]="";
+//                record[i][cindex]+=value;
+//                rowid.push_back(i);
+//                }
+            }else if(opr==2){
+//                if(cmpstring(record[i][cindex2],value2)<0){
+//                record[i][cindex]="";
+//                record[i][cindex]+=value;
+//                rowid.push_back(i);
+//                }
+            }else if(opr==3){
+                if(cmpstring(record[i][cindex2],value2)>=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpstring(record[i][cindex2],value2)<=0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpstring(record[i][cindex2],value2)==0){
+                    record[i][cindex]="";
+                    record[i][cindex]+=value;
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }
+    return rowid;
+}
+vector<int> Table::select(const char* cname,int ctype,int opr,const char* value){
+    vector<int> rowid;
+
+    // > < >= <= =
+    // 1 2 3  4  5
+    // type 1 int 2 double 3 varchar
+    int cindex=getColIndex(cname);
+    if(ctype==1){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpint(record[i][cindex],value)>0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==2){
+                if(cmpint(record[i][cindex],value)<0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==3){
+                if(cmpint(record[i][cindex],value)>=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpint(record[i][cindex],value)<=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpint(record[i][cindex],value)==0){
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }else if(ctype==2){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+                if(cmpdouble(record[i][cindex],value)>0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==2){
+                if(cmpdouble(record[i][cindex],value)<0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==3){
+                if(cmpdouble(record[i][cindex],value)>=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpdouble(record[i][cindex],value)<=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpdouble(record[i][cindex],value)==0){
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }else if(ctype==3){
+        for(int i=0;i<nrow;i++){
+            if(opr==1){
+//                if(cmpstring(record[i][cindex],value)>0){
+//                rowid.push_back(i);
+//                }
+            }else if(opr==2){
+//                if(cmpstring(record[i][cindex],value)<0){
+//                rowid.push_back(i);
+//                }
+            }else if(opr==3){
+                if(cmpstring(record[i][cindex],value)>=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==4){
+                if(cmpstring(record[i][cindex],value)<=0){
+                    rowid.push_back(i);
+                }
+            }else if(opr==5){
+                if(cmpstring(record[i][cindex],value)==0){
+                    rowid.push_back(i);
+                }
+            }
+        }
+    }
+
+    return rowid;
+}
+
+int Table::cmpint(string s1,string s2){
+    // > < >= <= =
+    // + - +  -  0
+    int a1 = std::atoi( s1.c_str() );
+    int a2 = std::atoi( s2.c_str() );
+    return a1-a2;
+}
+int Table::cmpdouble(string s1,string s2){
+    double a1 = std::atof( s1.c_str() );
+    double a2 = std::atof( s2.c_str() );
+    return (int)(a1-a2);
+}
+int Table::cmpstring(string s1,string s2){
+    return s1.compare(s2);
+}
+
 bool Table::pushrecord(vector<int> colindex,vector<string> value){
     vector<string> rec;
     for(int i=0;i<ncol;i++){

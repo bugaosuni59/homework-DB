@@ -24,12 +24,20 @@ public:
     bool pushcol(const char* columnName,const char* columnType);// 返回0：重复了，1：成功
     bool pushrecord(vector<int> colindex,vector<string> value);
     bool pushrecord(vector<string> cname,vector<string> value);
+    void delrecord(const char* cname,int ctype,int opr,const char* value);
     void rename(const char* newname);
     bool dropcol(const char* columnName);
     bool hascol(const char* cname); // 检测有无col
     int getColTypeNum(const char* cname); // 返回1:int 2:double 3:varchar 0:未知错误
     int getColIndex(const char* cname);
     bool isWord(string str,string word);
+    int cmpint(string s1,string s2);
+    int cmpdouble(string s1,string s2);
+    int cmpstring(string s1,string s2);
+    void update(const char* cname,int ctype,const char* value);
+    vector<int> update(const char* cname,int ctype,const char* value,const char* cname2,int ctype2,int opr,const char* value2);
+    vector<int> select(const char* cname,int ctype,int opr,const char* value);
+
     string name; // 表单名称
     int ncol;       // 列数量
     int nrow;       // 记录数量

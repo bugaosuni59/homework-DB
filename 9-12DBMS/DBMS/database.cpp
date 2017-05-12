@@ -76,7 +76,22 @@ int Database::getColTypeNum(const char* tblName,const char* cname){
 bool Database::pushrecord(const char* tblName,vector<string> cname,vector<string> value){
     return table[getTableIndex(tblName)].pushrecord(cname,value);
 }
+void Database::delrecord(const char* tblName,const char* cname,int ctype,int opr,const char* value){
+    table[getTableIndex(tblName)].delrecord(cname,ctype,opr,value);
+}
+void Database::update(const char* tblname,const char* cname,int ctype,const char* value){
+    table[getTableIndex(tblname)].update(cname,ctype,value);
+}
 
+vector<int> Database::update(const char* tblname,const char* cname,int ctype,const char* value,const char* cname2,int ctype2,int opr,const char* value2){
+    return table[getTableIndex(tblname)].update(cname,ctype,value,cname2,ctype2,opr,value2);
+}
+vector<int> Database::select(const char* tblname,const char* cname,int ctype,int opr,const char* value){
+    return table[getTableIndex(tblname)].select(cname,ctype,opr,value);
+}
+int Database::getColIndex(const char* tblname,const char* cname){
+    return table[getTableIndex(tblname)].getColIndex(cname);
+}
 int Database::getTableIndex(const char* tblName){
     string s;
     int l=strlen(tblName);
