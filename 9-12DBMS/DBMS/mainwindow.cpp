@@ -557,7 +557,7 @@ QString MainWindow::sqlExecute(){
             QString colname2=tem1;
             int opr = readOpr(tem1,jb);   // 运算符
             if(opr==0)return err;
-            int coltype2=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname.toLatin1().data());
+            int coltype2=dbms->db[dbms->getDbIndex(currentDb.name.data())].getColTypeNum(tblname.toLatin1().data(),colname2.toLatin1().data());
             // 1整数 2小数 3字符串
             // 数字分号 '字符串'分号
             if(coltype2==3){

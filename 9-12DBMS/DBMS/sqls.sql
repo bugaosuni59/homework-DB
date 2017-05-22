@@ -117,7 +117,9 @@ alter
 						;
 			DROP
 				列名
-					;
+	
+	;
+
 insert
 	into
 		表名
@@ -130,6 +132,7 @@ insert
 									)
 										;
 	
+
 update
 	表名
 		set
@@ -164,7 +167,7 @@ select
 				;
 				where
 					...
-
+delete from tbl3 where id=2;
 delete
 	from
 		表名
@@ -213,3 +216,5 @@ delete
 											...
 
 根共8种
+
+
