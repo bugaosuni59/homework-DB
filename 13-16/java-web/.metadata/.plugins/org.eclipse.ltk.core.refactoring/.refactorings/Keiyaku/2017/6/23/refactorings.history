@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="将资源“Keiyaku/WebContent/test.jsp”重命名为“index.jsp”" description="重命名资源“test.jsp”" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="WebContent/test.jsp" name="index.jsp" stamp="1496733283231" updateReferences="true"/>
-</session>
