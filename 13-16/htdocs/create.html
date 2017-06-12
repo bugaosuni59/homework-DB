@@ -3,19 +3,25 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+	<script language="javaScript">
+		function fback(){
+			window.history.back();
+		}
+	</script>
 	</head>
 	<body>
 		<span>发起新合同</span></br>
 		<span>合同主题：</span>
 		<input name="name" type="text" class="" placeholder="用户名" ></br>
-		<span>发起者：</span></br>
+		<span>　发起者：</span></br>
 		<span>合同对象：</span>
 		<input name="name" type="text" class="" placeholder="用户名" ></br>
-		<span>审核人：</span>
+		<span>　审核人：</span>
 		<input name="name" type="text" class="" placeholder="用户名" ></br>
 		<span>合同内容：</span></br>
 		<textarea name="comment" rows="15" cols="40"></textarea>
+		<br/>
 		<input type="submit" value="确认" class="" />  
-		<input type="reset" value="取消" class="" />
+		<input type="reset" value="取消" class="" onclick="fback()"/>
 	</body>
 </html>
