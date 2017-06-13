@@ -2,23 +2,36 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>注册</title>
+		<style>
+			input::-webkit-input-placeholder{color:tomato;}
+			input:-moz-placeholder{color:tomato;}
+			input::-moz-placeholder{color:tomato;}
+			input:-ms-input-placeholder{color:tomato;}
+		</style>
 	</head>
-	<body>
+	<body background="1.png">
+		<br/><br/><br/><br/><br/><br/>
 		<form action="regist.php" method="post">
-			<span>注册<br/></span>
-			<div>
-				<span>用户名：</span>
-				<input name="name" type="text" class="" placeholder="用户名" ></br>
-				<span>密　码：</span>
-				<input name="pswd" type="password" class="" placeholder="密码" ></br>
-				<span>验证码：</span>
-				<input name="vert" type="text" class="" placeholder="验证码" >
-			</div>
-			<div>
-				<input type="submit" value="确认注册" class="" />  
-				<!--<input type="reset" value="重置" class="" />-->
-				<span><a href="index.html">返回</a></span>
+			<table style='font-size:16px;font-family:微软雅黑' cellspacing=0 border=5 bordercolor='#caffff' align='center' bgcolor='#e6caff'>
+				<tr align='center' style='font-size:20px'><td colspan=2>注册</td></tr>
+				<tr>
+					<td colspan=2>用户名：<input name="name" type="text" class="" placeholder="*用户名至少两位" ></td>
+				</tr>
+				<tr>
+					<td colspan=2>密　码：<input name="pswd" type="password" class="" placeholder="*纯数字至少六位" ></td>
+				</tr>
+				<tr>
+					<td colspan=2>验证码：<input name="vert" type="text" class="" ></td>
+				</tr>
+				<tr align='center'>
+					<td colspan=2><img name="validate" onclick="validate.src+='?' + Math.random();" src="vertification.php" alt="点击刷新"></td>
+				</tr>
+				<tr align='center'>
+					<td><input type="submit" value="确认注册" class="" /></td>
+					<td><a href="index.html">返回</a></td>
+				</tr>
+			</table>
 			</div>
 		</form>					
 	</body>

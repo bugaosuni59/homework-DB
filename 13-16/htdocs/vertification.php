@@ -11,7 +11,7 @@ for($i = 0; $i < 4; $i++) {
     $code .= rand(0, 9);
 }
 $_SESSION["rand"] = $code;  //存储验证码
-imagestring($img, 30, 28, 10, $code, $black);
+imagestring($img, 5, 30, 10, $code, $black);
 //加入噪点干扰
 for($i=0;$i<1000;$i++) {
 	imagesetpixel($img, rand(0, 100) , rand(0, 100) , $black); 

@@ -6,24 +6,31 @@
 		<title>合同管理系统</title>
 	</head>
 
-	<body>
-		<span>登录<br/></span>
+	<body background="1.png">
+		<br/><br/><br/><br/><br/><br/>
 		<form action="login.php" method="post">
-			<div>
-				<span>用户名：</span>
-				<input name="name" type="text" class="" placeholder="用户名"><br/>
-				<span>密　码：</span>
-				<input name="pswd" type="password" class="" placeholder="密码"><br/>
-				<span>验证码：</span>
-				<input name="vertification" type="text" class="" placeholder="验证码">
-			</div>
-			<div>
-				<img name="validate" onclick="validate.src+='?' + Math.random();" src="vertification.php" alt="点击刷新">
-			</div>
-			<div>
-				<input type="submit" value="登录" class=""/>
-				<span><a href="regist.html">注册</a></span>
-			</div>
+		<table style='font-size:16px;font-family:微软雅黑' cellspacing=0 border=5 bordercolor='#caffff' align='center' bgcolor='#e6caff'>
+			<tr align='center'>
+				<td colspan=2 style='font-size:20px'>登录</td>
+			</tr>
+			<tr>
+				<td colspan=2>用户名：<input name="name" type="text" class="" placeholder="用户名"></td>
+			</tr>
+			<tr>
+				<td colspan=2>密　码：<input name="pswd" type="password" class="" placeholder="密码"></td>				
+			</tr>
+			<tr>
+				<td colspan=2>验证码：<input name="vertification" type="text" class="" placeholder="验证码"></td>
+			</tr>
+			<tr align='center'>
+				<td colspan=2><img name="validate" onclick="validate.src+='?' + Math.random();" src="vertification.php" alt="点击刷新"></td>
+			</tr>
+			<tr align='center'>
+				<td><input type="submit" value="登录" class=""/></td>				
+				<!--<td><input type="image" src="login.png" class=""/></td>-->				
+				<td><a href="regist.html">注册</a></td>				
+			</tr>
+		</table>
 		</form>
 	</body>
 

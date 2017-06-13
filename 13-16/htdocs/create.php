@@ -14,8 +14,8 @@
 session_start();
 ?>
 	<form action="add.php" method="post">
-		<div align='center' style='font-family:微软雅黑;font-size:30px'>发起新合同</div>
 		<table style='font-size:15px;font-family:微软雅黑' cellspacing=0 border=5 bordercolor='#caffff' align='center' bgcolor='#e6caff'>
+			<tr align='center' style='font-family:微软雅黑;font-size:30px'><td colspan=2>发起新合同</td></tr>
 			<tr align='left'>
 				<td colspan=2>合同主题：<input name="title" type="text" class="" placeholder="用户名" ></td>
 			</tr>

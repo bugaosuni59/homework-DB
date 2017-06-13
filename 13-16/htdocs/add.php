@@ -38,7 +38,7 @@ if(!($result->num_rows)){
 $sql="SELECT * FROM contract;";
 $result=$conn->query($sql);
 $cid=$result->num_rows+1;
-// 加contract，三人加list
+// 加contract，对象、审核人加list
 $sql="INSERT INTO contract(cid,title,word,creator,defender,checker,sid) VALUES(".
 	$cid.",'".$title."','".$word."','".$creator."','".$defender."','".$checker."',".$sid.");";
 // 测试
@@ -46,16 +46,33 @@ $sql="INSERT INTO contract(cid,title,word,creator,defender,checker,sid) VALUES("
 $conn->query($sql);
 
 // 插入list
-
-//$sql="INSERT INTO list(uid,cid) VALUES(".
-//	");";
-//$sql="INSERT INTO list(uid,cid) VALUES(".
-//	");";
-//$sql="INSERT INTO list(uid,cid) VALUES(".
-//	");";
-
-
-
-echo "<script>alert('合同发布成功！');history.go(-2);</script>";
+$uid=0;
+$sql="SELECT uid FROM user WHERE name='".$creator."'";
+$result=$conn->query($sql);
+$row=$result->fetch_assoc();
+$uid=$row['uid'];
+$sql="INSERT INTO list(uid,cid) VALUES(".$uid.",".$cid.
+	");";
+$conn->query($sql);
+if($defender!=$creator){
+	$sql="SELECT uid FROM user WHERE name='".$defender."'";
+	$result=$conn->query($sql);
+	$row=$result->fetch_assoc();
+	$uid=$row['uid'];
+	$sql="INSERT INTO list(uid,cid) VALUES(".$uid.",".$cid.
+		");";
+	$conn->query($sql);
+}
+if($checker!=$defender&&$checker!=$creator){
+	$sql="SELECT uid FROM user WHERE name='".$checker."'";
+	$result=$conn->query($sql);
+	$row=$result->fetch_assoc();
+	$uid=$row['uid'];
+	$sql="INSERT INTO list(uid,cid) VALUES(".$uid.",".$cid.
+		");";
+	$conn->query($sql);	
+}
+$conn->close();
+echo "<script>alert('合同发布成功！');window.location.href='main.php'</script>";
 
 ?>

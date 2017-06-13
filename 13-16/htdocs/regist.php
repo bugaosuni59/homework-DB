@@ -12,11 +12,13 @@ $pswd = $_POST["pswd"];
 if(strlen($pswd)<6||(!(ctype_digit($pswd)))){
     echo "<script>alert('密码至少要六位，且为纯数字！'); history.go(-1);</script>";  	
 }
-
-if(strlen($name)<2||(!preg_match('/^\w+$/i', $name)))  
-{  
+if(strlen($name)<2||(!preg_match('/^\w+$/i', $name)))  {  
     echo "<script>alert('用户名至少要两位，且不应含有非法字符！'); history.go(-1);</script>";  
 }  
+$vertification=$_POST['vertification'];
+if(($_SESSION['rand'])!=($vertification)){
+	echo "<script>alert('验证码错误！重新填写');window.location.href='regist.html'</script>";
+}
 $servername = "localhost";
 $username = "root";
 $password = "";

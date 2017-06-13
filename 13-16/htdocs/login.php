@@ -14,6 +14,7 @@ $pswd = $_POST["pswd"];
 $_SESSION['name']=$name;
 $_SESSION['pswd']=$pswd;
 $vertification=$_POST['vertification'];
+setcookie('name',"",time()+10,'/');// 清空cookie
 
 if($name == "" || $pswd == "")  
 {  
@@ -56,9 +57,11 @@ $isok = $result->num_rows;
 
 if($isok){	
 	echo "<h1>登录成功！3秒后进入主界面</h1>";
+	setcookie('name',$name,time()+1800,'/');
+//	setcookie('pswd',$,time()+10,'/'); 
 	header("refresh:3;url=main.php");
 }else{
-	echo "<script>alert('登陆信息有误！请重新填写');window.location.href='index.html'</script>"; 
+	echo "<script>alert('用户名或密码有误！请重新填写');window.location.href='index.html'</script>"; 
 }
 //echo $sql;
 $conn->close();

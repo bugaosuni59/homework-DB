@@ -59,12 +59,41 @@ $conn->query($sql);
 
 $sql = "SELECT * FROM contract WHERE cid=".$cid.";";
 $result = $conn->query($sql);
+$namenow=$_COOKIE['name'];
 
 $row=$result->fetch_assoc();
 
+$defender=$row['defender'];
+$creator=$row['creator'];
+$checker=$row['checker'];
 
-echo "<div align='center' style='font-family:微软雅黑;font-size:30px'>合同内容</div>".
+$flag=0;
+if($row['sid']==1){
+	if($namenow==$defender){
+		$flag=1;
+	}
+}else if($row['sid']==2){
+	if($namenow==$creator){
+		$flag=1;
+	}	
+}else if($row['sid']==3){
+	if($namenow==$checker){
+		$flag=1;
+	}
+}else if($row['sid']==4){
+	if($namenow==$creator){
+		$flag=1;
+	}
+}else if($row['sid']==5){
+	$flag=0;
+}else if($row['sid']==6){
+	$flag=0;
+}
+if($flag==0){
+	echo 
 	"<table style='font-size:15px;font-family:微软雅黑' cellspacing=0 border=5 bordercolor='#caffff' align='center' bgcolor='#e6caff'>".
+	"<tr align='center' style='font-family:微软雅黑;font-size:30px'><td colspan=3>合同内容</td></tr>".
+
 	"<tr align='left'>".
 	"<td colspan=3>"."合同主题：".$row['title']."</td>".
 	"</tr>".
@@ -85,14 +114,52 @@ echo "<div align='center' style='font-family:微软雅黑;font-size:30px'>合同
 	"</tr>".
 
 	"<tr align='center'>".
-	"<td>"."<input type=\"submit\" value=\"确认通过\" class=\"\" />"."</td>".
-	"<td>"."<input type=\"reset\" value=\"我拒绝\" class=\"\" />"."</td>".
+	"<td>"."<input type=\"submit\" disabled='disabled' value=\"确认通过\" class=\"\" />"."</td>".
+	"<td>"."<input type=\"submit\" disabled='disabled' value=\"我拒绝\" class=\"\" />"."</td>".
 	"<td>"."<input type=\"reset\" value=\"返回\" class=\"\" onclick = \"location='main.php'\"/>"."</td>".
 	"</tr>".
 	"<table/>";
-	
-//echo $_POST["cid"];
+}else{
+	echo 
+	"<table style='font-size:15px;font-family:微软雅黑' cellspacing=0 border=5 bordercolor='#caffff' align='center' bgcolor='#e6caff'>".
+	"<tr align='center' style='font-family:微软雅黑;font-size:30px'><td colspan=3>合同内容</td></tr>".
 
+	"<tr align='left'>".
+	"<td colspan=3>"."合同主题：".$row['title']."</td>".
+	"</tr>".
+	"<tr align='left'>".
+	"<td colspan=3>"."　发起者：".$row['creator']."</td>".
+	"</tr>".
+	"<tr align='left'>".
+	"<td colspan=3>"."合同对象：".$row['defender']."</td>".
+	"</tr>".
+	"<tr align='left'>".
+	"<td colspan=3>"."　审核人：".$row['checker']."</td>".
+	"</tr>".
+	"<tr align='left'>".
+	"<td colspan=3>"."合同内容："."</td>".
+	"</tr>".
+	"<tr align='center'>".
+	"<td colspan=3>"."<textarea readonly='readonly' name='comment' rows='22' cols='60'>".$row['word']."</textarea>"."</td>".
+	"</tr>".
+
+	"<tr align='center'>".
+	"<form action='ok.php' method='post'>".
+	"<input type='hidden' name='cid' value=".$cid.">".
+	"<td>"."<input type=\"submit\" value=\"确认通过\" class=\"\" >"."</td>".
+	"</form>".
+	"<form action='no.php' method='post'>".
+	"<input type='hidden' name='cid' value=".$cid.">".
+	"<td>"."<input type=\"submit\" value=\"我拒绝\" class=\"\" />"."</td>".
+	"</form>".
+	"<td>"."<input type=\"reset\" value=\"返回\" class=\"\" onclick = \"location='main.php'\"/>"."</td>".
+	"</tr>".
+	"<table/>";
+}
+
+	//disabled='disabled' 
+//echo $_POST["cid"];
+$conn->close();
 ?>
 
 </body>
