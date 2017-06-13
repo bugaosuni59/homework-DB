@@ -1,8 +1,5 @@
 CREATE DATABASE hmwk;
-DROP TABLE user;
-DROP TABLE contract;
-DROP TABLE stage;
-DROP TABLE list;
+USE hmwk;
 CREATE TABLE IF NOT EXISTS user (
   uid INT PRIMARY KEY,
   name VARCHAR(30),
@@ -48,4 +45,4 @@ INSERT INTO list(uid,cid) VALUES(1,1);
 INSERT INTO list(uid,cid) VALUES(1,2);
 INSERT INTO list(uid,cid) VALUES(2,1);
 INSERT INTO list(uid,cid) VALUES(2,2);
--- 用代码插入之前记得检验是否重复
+
