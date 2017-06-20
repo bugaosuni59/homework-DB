@@ -1,1 +1,0 @@
-<HTML><HEAD><META HTTP-EQUIV="Refresh" CONTENT="0; URL=../tags/html_ref_audio_video_dom.asp"><TITLE>302 File moved</TITLE></HEAD></HTML>

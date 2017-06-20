@@ -1,8 +1,0 @@
-<html>
-
-<frameset cols="200,*">
-  <frame src="../example/html/toc.html">
-  <frame src="../example/html/pref.html" name="view_frame">
-</frameset> 
-
-</html>
