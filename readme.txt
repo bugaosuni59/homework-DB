@@ -1,1 +1,3 @@
-源码、文档、操作视频已整理好
+DBMS is used by QT.
+Contract management system is used by PHP.
+Contract management system can be accessed at bugaosuni59.cn:88
